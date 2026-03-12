@@ -1,0 +1,83 @@
+// ─────────────────────────────────────────────────
+//  snip.link — Prisma Schema
+// ─────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  links         Link[]
+  apiKeys       ApiKey[]
+
+  @@map("users")
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  lastUsed  DateTime?
+  isActive  Boolean  @default(true)
+
+  @@map("api_keys")
+}
+
+model Link {
+  id            String   @id @default(cuid())
+  shortCode     String   @unique
+  originalUrl   String
+  title         String?
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  clicks        Click[]
+  isActive      Boolean  @default(true)
+  expiresAt     DateTime?
+  password      String?
+  maxClicks     Int?
+  tags          String[] @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([shortCode])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("links")
+}
+
+model Click {
+  id         String   @id @default(cuid())
+  linkId     String
+  link       Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  timestamp  DateTime @default(now())
+  ip         String?
+  userAgent  String?
+  referer    String?
+  browser    String?
+  os         String?
+  device     String?
+  country    String?
+  city       String?
+  region     String?
+  latitude   Float?
+  longitude  Float?
+
+  @@index([linkId])
+  @@index([timestamp])
+  @@index([linkId, timestamp])
+  @@map("clicks")
+}

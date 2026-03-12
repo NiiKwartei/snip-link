@@ -1,0 +1,64 @@
+# ─────────────────────────────────────────────────
+#  snip.link — Docker Compose (Development)
+# ─────────────────────────────────────────────────
+
+version: "3.9"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: sniplink-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sniplink
+      POSTGRES_PASSWORD: sniplink_dev
+      POSTGRES_DB: sniplink
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sniplink"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: sniplink-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sniplink-app
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://sniplink:sniplink_dev@postgres:5432/sniplink?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: change-me-in-production-use-random-string
+      BASE_URL: http://localhost:3001
+      CLIENT_URL: http://localhost:3001
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  pgdata:
