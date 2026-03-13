@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "/server/index.js"
+        },
+        {
+            "source": "/((?!api|auth|login|register|dashboard|admin|settings|analytics|health|links|app|static|assets|favicon.ico|robots.txt|sitemap.xml|_vercel).*)",
+            "destination": "/server/index.js"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
