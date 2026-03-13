@@ -53,30 +53,7 @@ export default function Layout() {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-4 space-y-1">
           <SidebarLink to="/" icon={LayoutDashboard} label="Dashboard" end />
-          <SidebarLink to="/links" icon={Link2} label="Links" />
-        </nav>
-
-        {/* User footer */}
-        <div className="px-4 py-4 border-t border-white/[0.06]">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-lg bg-brand-500/20 flex items-center justify-center">
-              <User size={14} className="text-brand-500" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-zinc-300 truncate">
-                {user?.name || user?.email}
-              </div>
-              <div className="text-xs text-zinc-600 truncate">{user?.email}</div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
-              title="Logout"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
-        </div>
+          <SidebarLink to="/links" icon={Link2} label="Links" />        </nav>
       </aside>
 
       {/* Main Content */}

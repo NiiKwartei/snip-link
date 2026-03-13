@@ -17,7 +17,7 @@ export function verifyToken(token) {
   return jwt.verify(token, JWT_SECRET);
 }
 
-// Required auth — blocks request if no valid token
+// Required auth — blocks request if no valid token (Modeified to allow demo-user access)
 export async function requireAuth(req, res, next) {
   try {
     const token =
@@ -25,7 +25,15 @@ export async function requireAuth(req, res, next) {
       req.headers.authorization?.replace("Bearer ", "");
 
     if (!token) {
-      return res.status(401).json({ error: "Authentication required" });
+      // For "no-auth" mode, we fetch a default demo user
+      const demoUser = await prisma.user.findFirst({
+        where: { email: "demo@snip.link" }
+      });
+      if (demoUser) {
+        req.user = demoUser;
+        return next();
+      }
+      return res.status(401).json({ error: "Authenticated required & no demo user found" });
     }
 
     const decoded = verifyToken(token);
@@ -35,13 +43,21 @@ export async function requireAuth(req, res, next) {
     });
 
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      // Fallback to demo user if token is invalid but we want no-auth
+      const demoUser = await prisma.user.findFirst({ where: { email: "demo@snip.link" } });
+      req.user = demoUser;
+      return next();
     }
 
     req.user = user;
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Invalid or expired token" });
+    const demoUser = await prisma.user.findFirst({ where: { email: "demo@snip.link" } });
+    if (demoUser) {
+      req.user = demoUser;
+      return next();
+    }
+    return res.status(401).json({ error: "Invalid token and no demo user found" });
   }
 }
 
