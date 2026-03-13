@@ -73,15 +73,13 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // ─── Start ──────────────────────────────────────────────────
-if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`
-    ⚡ snip.link server running
-    ├─ Port:        ${PORT}
-    ├─ Environment: ${process.env.NODE_ENV || "development"}
-    └─ URL:         http://localhost:${PORT}
-    `);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`
+  ⚡ snip.link server running
+  ├─ Port:        ${PORT}
+  ├─ Environment: ${process.env.NODE_ENV || "development"}
+  └─ URL:         http://localhost:${PORT}
+  `);
+});
 
 export default app;
