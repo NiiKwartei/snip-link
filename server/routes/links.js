@@ -14,7 +14,7 @@ import { shortenLimiter } from "../middleware/rateLimiter.js";
 const router = Router();
 
 const SHORT_CODE_LENGTH = parseInt(process.env.SHORT_CODE_LENGTH) || 6;
-const BASE_URL = process.env.BASE_URL || "http://localhost:3001";
+const BASE_URL = process.env.BASE_URL || (process.env.NODE_ENV === "production" ? "https://snip-link-delta.vercel.app" : "http://localhost:3001");
 
 // Blocked aliases that conflict with routes
 const RESERVED_ALIASES = new Set([
