@@ -8,10 +8,24 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
   }
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
 
   ::selection {
     background: rgba(249, 115, 22, 0.3);
@@ -40,7 +54,7 @@
   right: -200px;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -51,7 +65,7 @@
   left: -200px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -65,6 +79,7 @@
   .glass-card-hover {
     @apply glass-card transition-all duration-200;
   }
+
   .glass-card-hover:hover {
     @apply bg-white/[0.05] border-brand-500/20;
   }
@@ -80,25 +95,15 @@
   }
 
   .input-styled {
-    @apply bg-white/5 border border-white/10 rounded-xl px-4 py-3.5
-           text-sm font-mono text-zinc-200 outline-none
-           transition-all duration-200
-           focus:border-brand-500/50 focus:ring-2 focus:ring-brand-500/10;
+    @apply bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm font-mono text-zinc-200 outline-none transition-all duration-200 focus:border-brand-500/50 focus:ring-2 focus:ring-brand-500/10;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-br from-brand-500 to-brand-600
-           text-white font-semibold px-7 py-3.5 rounded-xl
-           shadow-lg shadow-brand-500/30
-           transition-all duration-150
-           hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/40
-           active:translate-y-0;
+    @apply bg-gradient-to-br from-brand-500 to-brand-600 text-white font-semibold px-7 py-3.5 rounded-xl shadow-lg shadow-brand-500/30 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/40 active:translate-y-0;
   }
 
   .btn-ghost {
-    @apply bg-white/5 border border-white/8 rounded-lg p-2
-           text-zinc-400 transition-all duration-200
-           hover:bg-white/10 hover:text-brand-500;
+    @apply bg-white/5 border border-white/10 rounded-lg p-2 text-zinc-400 transition-all duration-200 hover:bg-white/10 hover:text-brand-500;
   }
 
   .section-title {
@@ -112,9 +117,17 @@
 
 /* ─── Live indicator pulse ─────────────────────── */
 @keyframes live-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
 }
+
 .live-dot {
   width: 8px;
   height: 8px;

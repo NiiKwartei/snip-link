@@ -81,7 +81,7 @@ router.post("/", apiKeyAuth, optionalAuth, shortenLimiter, async (req, res, next
         expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
         password: data.password || null,
         maxClicks: data.maxClicks || null,
-        tags: data.tags || [],
+        tags: data.tags?.join(",") || "",
       },
     });
 
@@ -112,9 +112,9 @@ router.get("/", requireAuth, async (req, res, next) => {
       userId: req.user.id,
       ...(search && {
         OR: [
-          { shortCode: { contains: search, mode: "insensitive" } },
-          { originalUrl: { contains: search, mode: "insensitive" } },
-          { title: { contains: search, mode: "insensitive" } },
+          { shortCode: { contains: search } },
+          { originalUrl: { contains: search } },
+          { title: { contains: search } },
         ],
       }),
     };
@@ -133,6 +133,7 @@ router.get("/", requireAuth, async (req, res, next) => {
     res.json({
       links: links.map((l) => ({
         ...l,
+        tags: l.tags ? l.tags.split(",") : [],
         shortUrl: `${BASE_URL}/${l.shortCode}`,
         totalClicks: l._count.clicks,
       })),
@@ -166,6 +167,7 @@ router.get("/:shortCode", requireAuth, async (req, res, next) => {
 
     res.json({
       ...link,
+      tags: link.tags ? link.tags.split(",") : [],
       shortUrl: `${BASE_URL}/${link.shortCode}`,
       totalClicks: link._count.clicks,
     });
@@ -188,10 +190,17 @@ router.patch("/:shortCode", requireAuth, async (req, res, next) => {
 
     const updated = await prisma.link.update({
       where: { shortCode: req.params.shortCode },
-      data,
+      data: {
+        ...data,
+        tags: data.tags ? data.tags.join(",") : link.tags,
+      },
     });
 
-    res.json({ ...updated, shortUrl: `${BASE_URL}/${updated.shortCode}` });
+    res.json({
+      ...updated,
+      tags: updated.tags ? updated.tags.split(",") : [],
+      shortUrl: `${BASE_URL}/${updated.shortCode}`
+    });
   } catch (err) {
     next(err);
   }

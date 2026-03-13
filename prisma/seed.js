@@ -89,7 +89,7 @@ async function main() {
         originalUrl: linkData.originalUrl,
         title: linkData.title,
         userId: user.id,
-        tags: ["demo"],
+        tags: "demo",
       },
     });
 
