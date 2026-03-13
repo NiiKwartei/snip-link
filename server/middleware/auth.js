@@ -74,10 +74,22 @@ export async function optionalAuth(req, res, next) {
         where: { id: decoded.userId },
         select: { id: true, email: true, name: true },
       });
-      req.user = user || null;
+      if (user) {
+        req.user = user;
+        return next();
+      }
     }
+
+    // Fallback to demo user for no-auth experience
+    const demoUser = await prisma.user.findFirst({
+      where: { email: "demo@snip.link" }
+    });
+    req.user = demoUser || null;
   } catch {
-    req.user = null;
+    const demoUser = await prisma.user.findFirst({
+      where: { email: "demo@snip.link" }
+    });
+    req.user = demoUser || null;
   }
   next();
 }
